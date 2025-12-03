@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project1.Data;
@@ -15,18 +16,22 @@ namespace Project1.Controllers
     {
         private readonly Project1DbContext _context;
         private readonly IRegionRepo _regionRepo;
+        private readonly IMapper mapper;
 
-        public RegionsController(Project1DbContext context, IRegionRepo regionRepo)
+        public RegionsController(Project1DbContext context, IRegionRepo regionRepo, IMapper mappers)
         {
 
             _context = context;
             _regionRepo = regionRepo;
+            mapper = mappers;
         }
         [HttpGet]
         public async Task<IActionResult> GetRegions()
         {
             var regions = await _regionRepo.GetAllSync();
-            return Ok(regions);
+
+            // mapp Models ==> DTOs
+            return Ok(value: mapper.Map<List<RegionData>>(regions));
         }
 
         [HttpGet]
@@ -47,22 +52,12 @@ namespace Project1.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] RegionDto regionDto)
         {
-            var RegionDomainModel = new Region
-            {
-                Code = regionDto.Code,
-                Name = regionDto.Name,
-                RegionImageUrl = regionDto.RegionImageUrl
-            };
+            var RegionDomainModel = mapper.Map<Region>(regionDto);
+
             _context.Regions.Add(RegionDomainModel);
             _context.SaveChanges();
 
-            var returnedRegionDto = new RegionDto
-            {
-                Id = RegionDomainModel.Id,
-                Code = RegionDomainModel.Code,
-                Name = RegionDomainModel.Name,
-                RegionImageUrl = RegionDomainModel.RegionImageUrl
-            };
+            var returnedRegionDto = mapper.Map<RegionDto>(regionDto);
             return CreatedAtAction(nameof(GetRegionById), new { id = RegionDomainModel.Id }, returnedRegionDto);
         }
 
@@ -126,7 +121,7 @@ namespace Project1.Controllers
             //var regions = this._context.Regions.Find(id);
 
             // 2- Use FirstOrDefault Method ( Linq )
-            var regions = await this._context.Regions.FirstOrDefaultAsync(r => r.Id == id);
+            var regions = await _regionRepo.GetRegionById(id);
 
             return regions != null ? Ok(regions) : NotFound();
         }
@@ -137,40 +132,30 @@ namespace Project1.Controllers
         [Route("async")]
         public async Task<IActionResult> AddAsync([FromBody] RegionDto regionDto)
         {
-            var RegionDomainModel = new Region
-            {
-                Code = regionDto.Code,
-                Name = regionDto.Name,
-                RegionImageUrl = regionDto.RegionImageUrl
-            };
-            _context.Regions.Add(RegionDomainModel);
-            await _context.SaveChangesAsync();
+            var RegionDomainModel = mapper.Map<Region>(regionDto);
 
-            var returnedRegionDto = new RegionDto
-            {
-                Id = RegionDomainModel.Id,
-                Code = RegionDomainModel.Code,
-                Name = RegionDomainModel.Name,
-                RegionImageUrl = RegionDomainModel.RegionImageUrl
-            };
-            return CreatedAtAction(nameof(GetRegionById), new { id = RegionDomainModel.Id }, returnedRegionDto);
+            var addedRegion = await _regionRepo.Add(RegionDomainModel);
+
+            var returnedRegionDto = mapper.Map<RegionDto>(addedRegion);
+            return CreatedAtAction(nameof(GetRegionById), new { id = addedRegion.Id }, returnedRegionDto);
         }
 
         [HttpPut]
         [Route("{id:guid}/async")]
         public async Task<IActionResult> UpdateRegionAsync([FromRoute] Guid id, [FromBody] RegionDto regionDto)
         {
-            var existingRegion = await _context.Regions.FindAsync(id);
+            var region = new Region
+            {
+                Code = regionDto.Code,
+                Name = regionDto.Name,
+                RegionImageUrl = regionDto.RegionImageUrl
+            };
+            var existingRegion = await _regionRepo.Update(id, region);
 
             if (existingRegion == null)
             {
                 return NotFound();
             }
-
-            existingRegion.Code = regionDto.Code;
-            existingRegion.Name = regionDto.Name;
-            existingRegion.RegionImageUrl = regionDto.RegionImageUrl;
-            await _context.SaveChangesAsync();
 
             var returnedRegionDto = new RegionDto
             {
@@ -187,13 +172,12 @@ namespace Project1.Controllers
         [Route("{id:guid}/async")]
         public async Task<IActionResult> DeleteRegionAsync([FromRoute] Guid id)
         {
-            var existingRegion = await _context.Regions.FindAsync(id);
+            var existingRegion = await _regionRepo.Delete(id);
             if (existingRegion == null)
             {
                 return NotFound();
             }
-            _context.Regions.Remove(existingRegion);
-            await _context.SaveChangesAsync();
+             
             return NoContent();
         }
     }

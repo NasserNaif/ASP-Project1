@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Project1.Data;
+using Project1.Mappings;
 using Project1.Models.Domain;
 
 namespace Project1.Repository
@@ -8,6 +9,7 @@ namespace Project1.Repository
     public class RegionImpl : IRegionRepo
     {
         private readonly Project1DbContext _context;
+        private readonly AutoMapperprofiles mapper;
 
         public RegionImpl(Project1DbContext context)
         {
@@ -44,14 +46,36 @@ namespace Project1.Repository
             return await _context.Regions.ToListAsync();
         }
 
-        public Task<Region> GetRegionById(Guid id)
+        public async Task<Region> GetRegionById(Guid id)
         {
-            throw new NotImplementedException();
+            var region = await _context.Regions.FirstOrDefaultAsync(elm => elm.Id == id);
+
+            if (region == null)
+            {
+                return null;
+            }
+
+            return region;
         }
 
-        public Task<Region> Update(Guid id, Region region)
+        public async Task<Region> Update(Guid id, Region region)
         {
-            throw new NotImplementedException();
+            var exisitRegion = await _context.Regions.FirstOrDefaultAsync(elm => elm.Id == id);
+
+
+            if (exisitRegion == null)
+            {
+                return null;
+            }
+
+            exisitRegion.Name = region.Name;
+            exisitRegion.Code = region.Code;
+            exisitRegion.RegionImageUrl = region.RegionImageUrl;
+
+            await _context.SaveChangesAsync();
+
+            return exisitRegion;
+
         }
     }
 }

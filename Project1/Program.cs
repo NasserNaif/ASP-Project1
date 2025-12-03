@@ -1,7 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
 using Project1.Data;
+using Project1.Mappings;
 using Project1.Repository;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Project1
 {
@@ -22,7 +25,13 @@ namespace Project1
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Project1ConnectionString"))
             );
 
+            // inject the Repository
             builder.Services.AddScoped<IRegionRepo, RegionImpl>();
+
+
+            // Inject the Automapper 
+            builder.Services.AddAutoMapper(typeof(AutoMapperprofiles));
+
 
             var app = builder.Build();
 

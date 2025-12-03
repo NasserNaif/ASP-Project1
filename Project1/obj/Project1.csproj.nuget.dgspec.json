@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PC FORCE\\C# Couse\\Project1\\Project1\\Project1.csproj": {}
+    "C:\\Users\\naotaibi\\Desktop\\ASP Corse\\Project1\\Project1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PC FORCE\\C# Couse\\Project1\\Project1\\Project1.csproj": {
+    "C:\\Users\\naotaibi\\Desktop\\ASP Corse\\Project1\\Project1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PC FORCE\\C# Couse\\Project1\\Project1\\Project1.csproj",
+        "projectUniqueName": "C:\\Users\\naotaibi\\Desktop\\ASP Corse\\Project1\\Project1.csproj",
         "projectName": "Project1",
-        "projectPath": "C:\\Users\\PC FORCE\\C# Couse\\Project1\\Project1\\Project1.csproj",
-        "packagesPath": "C:\\Users\\PC FORCE\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PC FORCE\\C# Couse\\Project1\\Project1\\obj\\",
+        "projectPath": "C:\\Users\\naotaibi\\Desktop\\ASP Corse\\Project1\\Project1.csproj",
+        "packagesPath": "C:\\Users\\naotaibi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\naotaibi\\Desktop\\ASP Corse\\Project1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PC FORCE\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\naotaibi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,12 +44,20 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Azure.Identity": {
               "target": "Package",
               "version": "[1.13.2, )"
@@ -96,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
