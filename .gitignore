@@ -1,8 +1,22 @@
+# Build outputs
 bin/
 obj/
+
+# IDE folders
 .vs/
 .idea/
+
+# User-specific files
 *.user
 *.suo
+
+# ASP.NET Core
 */Properties/launchSettings.json
 appsettings.*.Production.json
+
+# Optional: Add these common .NET ignores
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc

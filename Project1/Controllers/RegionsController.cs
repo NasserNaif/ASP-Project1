@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Project1.CustomActionFilter;
 using Project1.Data;
 using Project1.Models.Domain;
 using Project1.Models.DTO;
@@ -130,8 +131,16 @@ namespace Project1.Controllers
         // Add New region
         [HttpPost]
         [Route("async")]
+        [ValidateModel]
         public async Task<IActionResult> AddAsync([FromBody] RegionDto regionDto)
         {
+            // We use it if we don't use ValidateModel Action Filter
+
+            //if(ModelState.IsValid == false)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
             var RegionDomainModel = mapper.Map<Region>(regionDto);
 
             var addedRegion = await _regionRepo.Add(RegionDomainModel);
