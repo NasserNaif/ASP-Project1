@@ -10,6 +10,7 @@ namespace Project1.Mappings
         {
             // If the fields names is similair it will map it automatically 
             CreateMap<Region,RegionDto>().ReverseMap();
+            CreateMap<Walk,WalksDto>().ReverseMap();
 
 
             // But if the fields diffrenet you have to map them by ForMember() method. to map the dto field to the model field

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Project1.Data;
 using Project1.Models.Domain;
 using Project1.Models.DTO;
 using Project1.Repository;
@@ -23,9 +21,10 @@ namespace Project1.Controllers
 
         // GET All walks
         [HttpGet]
-        public async Task<IActionResult> GetWalks()
+        // Apply filter on Name filed
+        public async Task<IActionResult> GetWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
-            return Ok(mapper.Map<List<WalksDto>>(await repo.GetAll()));
+            return Ok(mapper.Map<List<WalksDto>>(await repo.GetAll(filterOn,filterQuery)));
         }
 
         [HttpGet]

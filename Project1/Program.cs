@@ -27,6 +27,7 @@ namespace Project1
 
             // inject the Repository
             builder.Services.AddScoped<IRegionRepo, RegionImpl>();
+            builder.Services.AddScoped<IWalkRepo, WalkRepoImpl>();
 
 
             // Inject the Automapper 

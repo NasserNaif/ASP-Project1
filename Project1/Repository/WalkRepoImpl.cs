@@ -33,9 +33,25 @@ namespace Project1.Repository
             return deletedWalk;
         }
 
-        public async Task<List<Walk>> GetAll()
+        public async Task<List<Walk>> GetAll(string? filterOn, string? filterQuery)
         {
-            return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
+            // With Filter
+            var walks =  dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
+
+
+            // Filtring
+            if (!string.IsNullOrWhiteSpace(filterOn) && !string.IsNullOrWhiteSpace(filterQuery))
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = walks.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+
+            return await walks.ToListAsync();
+
+            // OLD: Without Filter
+            //return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
         }
 
         public async Task<Walk> GetWalkById(Guid id)
