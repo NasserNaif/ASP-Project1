@@ -1,10 +1,11 @@
 ﻿using Project1.Models.Domain;
+using Project1.Models.DTO;
 
 namespace Project1.Repository
 {
     public interface IWalkRepo
     {
-        public Task<List<Walk>> GetAll(string? filterOn, string? filterQuery);
+        public Task<List<Walk>> GetAll(PaginationDto paginationDto ,FilterDto? filter);
         public Task<Walk> GetWalkById(Guid id);
 
         public Task<Walk> Create(Walk walk);

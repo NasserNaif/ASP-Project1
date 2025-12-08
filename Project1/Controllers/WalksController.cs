@@ -22,9 +22,9 @@ namespace Project1.Controllers
         // GET All walks
         [HttpGet]
         // Apply filter on Name filed
-        public async Task<IActionResult> GetWalks([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetWalks([FromQuery] PaginationDto pagination,[FromQuery] FilterDto? filter)
         {
-            return Ok(mapper.Map<List<WalksDto>>(await repo.GetAll(filterOn,filterQuery)));
+            return Ok(mapper.Map<List<WalksDto>>(await repo.GetAll(pagination, filter)));
         }
 
         [HttpGet]

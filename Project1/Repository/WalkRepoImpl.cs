@@ -2,6 +2,7 @@
 using Project1.Data;
 using Project1.Models.Domain;
 using System.Diagnostics.Eventing.Reader;
+using Project1.Models.DTO;
 
 namespace Project1.Repository
 {
@@ -33,22 +34,47 @@ namespace Project1.Repository
             return deletedWalk;
         }
 
-        public async Task<List<Walk>> GetAll(string? filterOn, string? filterQuery)
+        public async Task<List<Walk>> GetAll(PaginationDto paginationDto, FilterDto? filter)
         {
             // With Filter
             var walks =  dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
 
 
-            // Filtring
-            if (!string.IsNullOrWhiteSpace(filterOn) && !string.IsNullOrWhiteSpace(filterQuery))
+            if (filter != null)
             {
-                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
-                {
-                    walks = walks.Where(x => x.Name.Contains(filterQuery));
-                }
-            }
 
-            return await walks.ToListAsync();
+
+                // Filtring
+                if (!string.IsNullOrWhiteSpace(filter.FilterOn) && !string.IsNullOrWhiteSpace(filter.FilterQuery))
+                {
+                    if (filter.FilterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                    {
+                        walks = walks.Where(x => x.Name.Contains(filter.FilterQuery));
+                    }
+                }
+                
+                
+                // sorting 
+                if (!string.IsNullOrWhiteSpace(filter.SortBy))
+                {
+                    if (filter.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                    {
+                        walks = walks.OrderBy(x => x.Name);
+                    }
+                    
+                    else if (filter.SortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                    {
+                        walks = filter.IsAscending ?  walks.OrderBy(x => x.LengthInKm) :  walks.OrderByDescending(x => x.LengthInKm);
+                    }
+                        
+                }
+
+            }
+            
+            // apply pagination 
+            int skip = (paginationDto.PageNumber - 1) * paginationDto.PageSize;
+
+            return await walks.Skip(skip).Take(paginationDto.PageSize).ToListAsync();
 
             // OLD: Without Filter
             //return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
