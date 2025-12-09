@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project1.Models.Domain;
 using Project1.Models.DTO;
@@ -8,6 +9,7 @@ namespace Project1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class WalksController : ControllerBase
     {
         private readonly IWalkRepo repo;
@@ -21,6 +23,8 @@ namespace Project1.Controllers
 
         // GET All walks
         [HttpGet]
+        // role
+        [Authorize(Roles = "Writer")]
         // Apply filter on Name filed
         public async Task<IActionResult> GetWalks([FromQuery] PaginationDto pagination,[FromQuery] FilterDto? filter)
         {
