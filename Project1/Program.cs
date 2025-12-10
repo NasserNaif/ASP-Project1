@@ -6,7 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project1.Data;
 using Project1.Mappings;
+using Project1.Middlewares;
 using Project1.Repository;
+using Serilog;
 
 namespace Project1;
 
@@ -16,11 +18,24 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // define the logger
+        var logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
+            .MinimumLevel.Information()
+            .CreateLogger();
+
         // Add services to the container.
+
+        // Add logger to the DI container
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog(logger);
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+
+
         // Swagger without authentication
         // builder.Services.AddSwaggerGen();
 
@@ -110,6 +125,10 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        // ExceptionHandlerMiddleware applied to the pipeline
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 
         app.UseHttpsRedirection();
 

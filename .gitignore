@@ -20,3 +20,6 @@ appsettings.*.Production.json
 project.lock.json
 .DS_Store
 *.pyc
+
+# Logs files
+Logs/
